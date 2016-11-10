@@ -14,10 +14,10 @@ $app = new Silex\Application();
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
-        'dbname' => 'school',
-        'host' => '192.168.88.11',
-        'user' => 'developer',
-        'password' => '123',
+        'dbname' => 'pms',
+        'host' => 'localhost',
+        'user' => 'root',
+        'password' => 'salam',
         'charset' => 'utf8'
     ),
 ));
@@ -29,19 +29,7 @@ $app->before(function (Request $request) {
     }
 });
 
-$app->get('/hello/{name}', function ($name) use ($app) {
-    return 'Hello '.$app->escape($name);
-});
-
-$app->post('/login', function (Request $request) use ($app) {
-    $content = $request->getContent();
-    print_r($request->request);
-    $national_code = $request->get('national_code');
-    $res = $app['db']->fetchAll("SELECT * FROM person WHERE national_code = '$national_code'");
-    if (strlen($national_code) == 10) {
-        return $app->json(["token" => "123456", "content" => $content, "result" => json_encode($res)],200,["cookie"=>"aaa=123"]);
-    }
-    return $app->json(["message" => "login failed"], 403);
-});
+// Controller
+$app->mount('/user', new MyApp\UserController());
 
 $app->run();
