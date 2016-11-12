@@ -13,11 +13,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class Controller
 {
-    function response(Array $data)
+    function response($status, Array $data = [], $message = '')
     {
         $response = new JsonResponse();
         $response->setEncodingOptions(JSON_NUMERIC_CHECK);
-        $response->setData($data);
+        $data = json_encode($data);
+        $res = ['status' => $status, 'data' => $data, 'message' => $message];
+        $response->setData($res);
         return $response;
     }
 }
